@@ -11,7 +11,7 @@
             <el-button type="primary" style="margin: 5px" @click="load">搜索直达线路名称</el-button>
         </div>
         <tr></tr>
-        <el-table @load="load" :data="tableData" border stripe style="width: 25%">
+        <el-table :data="tableData" border stripe style="width: 25%">
             <el-table-column prop="lines" label="路线名称" sortable/>
         </el-table>
     </div>
@@ -44,6 +44,8 @@
                     this.tableData = []
                     console.log(res)
                     // this.tableData = res.data
+                    if (res.data.length == 0)
+                        this.$message.warning("不存在直达线路！请输入新的数据再次尝试！")
                     res.data.forEach(item => {
                         this.tableData.push({lines: item})
                     })

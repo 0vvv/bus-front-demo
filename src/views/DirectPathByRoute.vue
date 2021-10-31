@@ -1,32 +1,33 @@
 <template>
     <div style="padding: 10px">
         <div style="margin: 10px 0">
-            站点1: <el-input v-model="search1" placeholder="请输入站点1的名称……" style="width: 25%" clearable/>
+            站点1:
+            <el-input v-model="search1" placeholder="请输入站点1的名称……" style="width: 25%" clearable/>
             <tr/>
-            站点2: <el-input v-model="search2" placeholder="请输入站点2的名称……" style="width: 25%" clearable/>
+            站点2:
+            <el-input v-model="search2" placeholder="请输入站点2的名称……" style="width: 25%" clearable/>
             <tr/>
-            线路: <el-input v-model="search3" placeholder="请输入线路的名称……" style="width: 25%" clearable/>
+            线路:
+            <el-input v-model="search3" placeholder="请输入线路的名称……" style="width: 25%" clearable/>
             <el-button type="primary" style="margin: 5px" @click="findPath">搜索途径站点</el-button>
         </div>
-
-
         <div class="block">
-            <el-timeline style="padding-left: 20px">
+            <el-timeline v-for="eachroute in route" style="padding-left: 20px">
                 <div>
-                    <el-tag v-for="tag in tags" :key="tag.name">
-                        {{ tag.name }}
+                    <el-tag :key="eachroute.name">
+                        {{ eachroute.name }}
                     </el-tag>
                 </div>
 
                 <el-timeline-item
-                        v-for="(activity, index) in activities"
+                        v-for="(station, index) in eachroute.stations"
                         :key="index"
-                        :color="activity.color"
-                        :size="activity.size"
+                        color="#507cff"
+                        size='large'
                         :timestamp="index"
-                        :center="activity.center"
+                        center="true"
                 >
-                    {{ activity.content }}
+                    {{ station.name }}
                 </el-timeline-item>
             </el-timeline>
         </div>
@@ -45,14 +46,12 @@
                 search1: '',
                 search2: '',
                 search3: '',
-                activities: [
-                    {
-                        // content: '',
-                        // size: 'large',
-                        // color: '#507cff',
-                        // center: true,   横向时间轴
-                    },
-                ],
+                route: [],
+                // activities: [
+                //     {
+                //         // center: true,   横向时间轴
+                //     },
+                // ],
                 tags: [
                     // { name: 'Tag 1', type: '' },
                 ],
@@ -70,14 +69,18 @@
                         routename: this.search3,
                     }
                 }).then(res => {
+                    this.tags = []
+                    // this.activities = []
+                    this.route = []
                     console.log(res)
                     this.loading = false
-                    res.data.forEach(item => {              //改成站名
-                        this.tags.push({name: item.name})
-                        item.stations.forEach(station =>
-                            this.activities.push({content: station.name, size: 'large', color: '#507cff',center: true})
-                        )
-                    })
+                    this.route = res.data
+                    // res.data.forEach(item => {
+                    //     this.tags.push({name: item.name})
+                    //     item.stations.forEach(station =>
+                    //         this.activities.push({content: station.name, size: 'large', color: '#507cff', center: true})
+                    //     )
+                    // })
                 })
             }
         },
